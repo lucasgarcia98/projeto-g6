@@ -20,17 +20,6 @@ const NAVIGATION: Navigation = [
     segment: 'situation',
     title: 'Situação',
     icon: <ShoppingCartIcon />,
-    children: [
-      {
-        segment: 'list',
-        title: 'Listagem',
-      },
-      {
-        segment: 'new',
-        title: 'Novo',
-        pattern: '/situation/new',
-      },
-    ],
   },
   {
     segment: 'category',

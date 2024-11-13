@@ -2,6 +2,7 @@
 import {
   Box,
   Button,
+  IconButton,
   Stack,
   Table,
   TableBody,
@@ -11,118 +12,118 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useRouter } from 'next/navigation';
 
-import React from 'react';
+import { Delete, Edit } from '@mui/icons-material';
+import React, { useState } from 'react';
+import NewSituation from './new';
 
-const data: Array<React.ReactNode> = [
-  <TableRow key={1}>
-    <TableCell component="th" scope="row">
-      Cupcake
-    </TableCell>
-    <TableCell align="right">305</TableCell>
-    <TableCell align="right">3.7</TableCell>
-    <TableCell align="right">67</TableCell>
-    <TableCell align="right">4.3</TableCell>
-  </TableRow>,
-  <TableRow key={2}>
-    <TableCell component="th" scope="row">
-      Cupcake
-    </TableCell>
-    <TableCell align="right">305</TableCell>
-    <TableCell align="right">3.7</TableCell>
-    <TableCell align="right">67</TableCell>
-    <TableCell align="right">4.3</TableCell>
-  </TableRow>,
-  <TableRow key={3}>
-    <TableCell component="th" scope="row">
-      Cupcake
-    </TableCell>
-    <TableCell align="right">305</TableCell>
-    <TableCell align="right">3.7</TableCell>
-    <TableCell align="right">67</TableCell>
-    <TableCell align="right">4.3</TableCell>
-  </TableRow>,
-  <TableRow key={4}>
-    <TableCell component="th" scope="row">
-      Cupcake
-    </TableCell>
-    <TableCell align="right">305</TableCell>
-    <TableCell align="right">3.7</TableCell>
-    <TableCell align="right">67</TableCell>
-    <TableCell align="right">4.3</TableCell>
-  </TableRow>,
-  <TableRow key={5}>
-    <TableCell component="th" scope="row">
-      Cupcake
-    </TableCell>
-    <TableCell align="right">305</TableCell>
-    <TableCell align="right">3.7</TableCell>
-    <TableCell align="right">67</TableCell>
-    <TableCell align="right">4.3</TableCell>
-  </TableRow>,
-  <TableRow key={6}>
-    <TableCell component="th" scope="row">
-      Cupcake
-    </TableCell>
-    <TableCell align="right">305</TableCell>
-    <TableCell align="right">3.7</TableCell>
-    <TableCell align="right">67</TableCell>
-    <TableCell align="right">4.3</TableCell>
-  </TableRow>,
-  <TableRow key={7}>
-    <TableCell component="th" scope="row">
-      Cupcake
-    </TableCell>
-    <TableCell align="right">305</TableCell>
-    <TableCell align="right">3.7</TableCell>
-    <TableCell align="right">67</TableCell>
-    <TableCell align="right">4.3</TableCell>
-  </TableRow>,
-];
 export default function ListSituation() {
-  const router = useRouter();
+  const [dialogNewForm, setDialogNewForm] = useState(false);
+  const [dataList, setDataList] = useState<Array<React.ReactNode>>([]);
+  const [dataEdit, setDataEdit] = useState<{
+    id: number;
+    name: string;
+    situation: string;
+  }>();
+  const handleDialogForm = () => {
+    setDialogNewForm((prev) => !prev);
+  };
+
+  const TableRowCustomized = (data: {
+    id: number;
+    name: string;
+    situation: string;
+  }) => (
+    <TableRow key={1}>
+      <TableCell colSpan={4}>{data.name}</TableCell>
+      <TableCell colSpan={4}>{data.situation}</TableCell>
+      <TableCell align="right" colSpan={2}>
+        <Stack columnGap={2} flexDirection={'row'} justifyContent={'flex-end'}>
+          <IconButton
+            sx={{
+              color: 'lightblue',
+              backgroundColor: 'transparent',
+              border: '1px solid lightblue',
+              borderRadius: '4px',
+            }}
+            onClick={() => {
+              setDataEdit(data);
+              handleDialogForm();
+            }}
+          >
+            <Edit />
+          </IconButton>
+          <IconButton
+            sx={{
+              color: 'lightsalmon',
+              backgroundColor: 'transparent',
+              border: '1px solid lightsalmon',
+              borderRadius: '4px',
+            }}
+          >
+            <Delete />
+          </IconButton>
+        </Stack>
+      </TableCell>
+    </TableRow>
+  );
+
+  const handleSave = (data: {
+    id: number;
+    name: string;
+    situation: string;
+  }) => {
+    const newRow = TableRowCustomized(data);
+
+    setDataList((prev) => [...prev, newRow]);
+  };
 
   return (
-    <Stack>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          border: '1px solid #ccc',
-          py: '.8rem',
-          px: '1rem',
-          borderRadius: '10px 10px 0px 0px',
-        }}
-      >
-        <Typography>Lista de situações</Typography>
-        <Button
-          variant="outlined"
-          onClick={() => router.push('/situation/new')}
+    <>
+      <Stack>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            border: '1px solid #ccc',
+            py: '.8rem',
+            px: '1rem',
+            borderRadius: '10px 10px 0px 0px',
+            alignItems: 'center',
+          }}
         >
-          Novo
-        </Button>
-      </Box>
-      <TableContainer
-        sx={{
-          border: '1px solid #ccc',
-          borderRadius: '0px 0px 10px 10px',
-          borderTop: 'none',
-        }}
-      >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Dessert (100g serving)</TableCell>
-              <TableCell align="right">Calories</TableCell>
-              <TableCell align="right">Fat&nbsp;(g)</TableCell>
-              <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-              <TableCell align="right">Protein&nbsp;(g)</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{data.map((row) => row)}</TableBody>
-        </Table>
-      </TableContainer>
-    </Stack>
+          <Typography>Lista de situações</Typography>
+          <Button variant="outlined" onClick={handleDialogForm}>
+            Novo
+          </Button>
+        </Box>
+        <TableContainer
+          sx={{
+            border: '1px solid #ccc',
+            borderRadius: '0px 0px 10px 10px',
+            borderTop: 'none',
+          }}
+        >
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell colSpan={4}>Nome</TableCell>
+                <TableCell colSpan={4}>Situação</TableCell>
+                <TableCell align="right" colSpan={2}>
+                  Ações
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>{dataList.map((row) => row)}</TableBody>
+          </Table>
+        </TableContainer>
+      </Stack>
+      <NewSituation
+        data={dataEdit}
+        openDialog={dialogNewForm}
+        onCloseDialog={handleDialogForm}
+        handleSave={handleSave}
+      />
+    </>
   );
 }
