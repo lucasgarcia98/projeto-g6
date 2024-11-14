@@ -15,9 +15,11 @@
     "@mui/material": "^6",
     "@mui/material-nextjs": "^6",
     "@mui/x-date-pickers": "^7.22.2",
+    "@prisma/client": "^5.22.0",
     "@toolpad/core": "0.9.0",
     "date-fns": "^4.1.0",
     "next": "^14",
+    "prisma": "^5.22.0",
     "react": "^18",
     "react-dom": "^18"
   },

@@ -1,0 +1,5 @@
+model categoria {
+  id     Int      @id @default(autoincrement())
+  nome   String   @db.VarChar(100)
+  tarefa tarefa[]
+}

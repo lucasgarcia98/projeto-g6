@@ -16,19 +16,22 @@ import {
 import FormCustom from '@/app/components/custom/form';
 import { Delete, Edit } from '@mui/icons-material';
 import { useDialogs } from '@toolpad/core';
-import { useMemo, useState } from 'react';
-
+import { useEffect, useMemo, useState } from 'react';
+export type IDataCustom = {
+  id: string;
+  name: string;
+};
 export default function ListCustom({
+  route,
   title,
   titleDialog,
 }: {
+  route: string;
   title: string;
   titleDialog: string;
 }) {
   const [dialogForm, setDialogForm] = useState(false);
-  const [dataList, setDataList] = useState<Array<{ id: string; name: string }>>(
-    [],
-  );
+  const [dataList, setDataList] = useState<Array<IDataCustom>>([]);
   const [dataEdit, setDataEdit] = useState<{
     id: string;
     name: string;
@@ -52,7 +55,16 @@ export default function ListCustom({
     });
 
     if (confirm) {
-      setDataList((prev) => prev.filter((item) => item.id !== id));
+      try {
+        const deleteById = await fetch(`api/${route}/${id}`, {
+          method: 'DELETE',
+        }).then((res) => res.json());
+
+        console.log(deleteById);
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -99,21 +111,55 @@ export default function ListCustom({
     [dataList],
   );
 
-  const handleSave = (data: { id: string; name: string }) => {
+  const handleSave = async (data: IDataCustom) => {
     if (dataEdit?.id === data.id) {
-      setDataList((prev) =>
-        prev.map((item) =>
-          item.id === data.id ? { ...item, name: data.name } : item,
-        ),
-      );
-
-      setDataEdit(null);
+      try {
+        const updateById = await fetch(`api/${route}/${data.id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            name: data.name,
+          }),
+        }).then((res) => res.json());
+        console.log(updateById);
+      } catch (error) {
+        console.error(error);
+      }
+      window.location.reload();
 
       return;
     } else {
-      setDataList((prev) => [...prev, data]);
+      try {
+        const create = await fetch(`api/${route}`, {
+          method: 'POST',
+          body: JSON.stringify({
+            name: data.name,
+          }),
+        }).then((res) => res.json());
+        console.log(create);
+      } catch (error) {
+        console.error(error);
+      }
+      window.location.reload();
     }
   };
+
+  useEffect(() => {
+    fetch(`api/${route}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.length > 0) {
+          setDataList(
+            data.map((item: any) => ({
+              id: item.id,
+              name: item.nome,
+            })),
+          );
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   return (
     <>

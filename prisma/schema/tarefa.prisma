@@ -1,0 +1,13 @@
+model tarefa {
+  id               Int       @id @default(autoincrement())
+  nome             String    @db.VarChar(100)
+  descricao        String    @db.VarChar(2000)
+  data_criacao     DateTime  @default(now())
+  data_prevista    DateTime?
+  data_finalizacao DateTime?
+  responsavel      String    @db.VarChar(100)
+  situacao         situacao  @relation(fields: [situacaoId], references: [id])
+  situacaoId       Int
+  categoria        categoria @relation(fields: [categoriaId], references: [id])
+  categoriaId      Int
+}
