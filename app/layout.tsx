@@ -1,3 +1,4 @@
+'use client';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import type { Branding, Navigation } from '@toolpad/core/AppProvider';
@@ -5,6 +6,9 @@ import { AppProvider } from '@toolpad/core/nextjs';
 import * as React from 'react';
 
 import { Home } from '@mui/icons-material';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { ptBR } from 'date-fns/locale';
 
 const NAVIGATION: Navigation = [
   {
@@ -47,11 +51,13 @@ export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning data-toolpad-mode="dark">
       <body>
-        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <AppProvider navigation={NAVIGATION} branding={BRANDING}>
-            {props.children}
-          </AppProvider>
-        </AppRouterCacheProvider>
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
+          <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+            <AppProvider navigation={NAVIGATION} branding={BRANDING}>
+              {props.children}
+            </AppProvider>
+          </AppRouterCacheProvider>
+        </LocalizationProvider>
       </body>
     </html>
   );

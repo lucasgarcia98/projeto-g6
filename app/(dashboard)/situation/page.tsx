@@ -1,9 +1,5 @@
-import ListSituation from './list';
+import ListCustom from '@/app/components/custom/list';
 
 export default function SituationPage() {
-  return (
-    <div>
-      <ListSituation />
-    </div>
-  );
+  return <ListCustom title="Situações" titleDialog="Situação" />;
 }

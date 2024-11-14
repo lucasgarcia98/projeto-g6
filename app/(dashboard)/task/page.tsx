@@ -1,9 +1,5 @@
-import Typography from '@mui/material/Typography';
+import ListTask from '@/app/components/task/list';
 
 export default function TaskPage() {
-  return (
-    <Typography>
-      Página de tarefas
-    </Typography>
-  );
+  return <ListTask />;
 }

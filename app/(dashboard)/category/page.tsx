@@ -1,9 +1,5 @@
-import Typography from '@mui/material/Typography';
+import ListCustom from '@/app/components/custom/list';
 
 export default function CategoryPage() {
-  return (
-    <Typography>
-      Página de categorias
-    </Typography>
-  );
+  return <ListCustom title="Categorias" titleDialog="Categoria" />;
 }
