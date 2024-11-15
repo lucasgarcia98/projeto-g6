@@ -242,10 +242,10 @@ export default function ListTask() {
             border: '1px solid #ccc',
             borderRadius: '0px 0px 10px 10px',
             borderTop: 'none',
-            overflow: 'auto',
+            overflowX: 'scroll',
           }}
         >
-          <Table sx={{ minWidth: 650, overflow: "auto" }} aria-label="simple table">
+          <Table sx={{ minWidth: 650, maxWidth: 850, overflowX: "scroll" }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Nome</TableCell>
@@ -261,7 +261,7 @@ export default function ListTask() {
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody sx={{overflow: "auto"}}>{rows}</TableBody>
+            <TableBody sx={{overflowX: "scroll"}}>{rows}</TableBody>
           </Table>
         </TableContainer>
       </Stack>
