@@ -13,16 +13,17 @@ import {
 import { DatePicker } from '@mui/x-date-pickers';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import SelectCustom from '../custom/input/select';
+import { SaveType } from './list';
 export interface IFormTask {
   id: string;
   name: string;
   description: string;
-  created_date: Date;
-  expected_date: Date;
-  finished_date: Date;
-  responsavel: string;
-  situation_id: number;
-  category_id: number;
+  created_date: Date | null;
+  expected_date: Date | null;
+  finished_date: Date | null;
+  responsible: string;
+  situation_id: string;
+  category_id: string;
 }
 
 const initialData: IFormTask = {
@@ -30,11 +31,11 @@ const initialData: IFormTask = {
   name: '',
   description: '',
   created_date: new Date(),
-  expected_date: new Date(),
-  finished_date: new Date(),
-  responsavel: '',
-  situation_id: 0,
-  category_id: 0,
+  expected_date: null,
+  finished_date: null,
+  responsible: '',
+  situation_id: '',
+  category_id: '',
 };
 
 export function FormTask({
@@ -46,9 +47,30 @@ export function FormTask({
   data?: IFormTask | null;
   openDialog: boolean;
   onCloseDialog: () => void;
-  handleSave: (data: IFormTask) => void;
+  handleSave: (data: SaveType) => void;
 }) {
   const [form, setForm] = useState<IFormTask>(initialData);
+  const [errors, setErros] = useState<
+    Omit<
+      IFormTask,
+      'id' | 'created_date' | 'expected_date' | 'finished_date'
+    > & {
+      created_date?: string;
+      expected_date?: string;
+      finished_date?: string;
+    }
+  >({
+    name: '',
+    description: '',
+    created_date: '',
+    expected_date: '',
+    finished_date: '',
+    responsible: '',
+    situation_id: '',
+    category_id: '',
+  });
+  const [optionsSituations, setOptionsSituations] = useState<Array<any>>([]);
+  const [optionsCategories, setOptionsCategories] = useState<Array<any>>([]);
 
   const resetFields = useCallback(() => {
     setForm(initialData);
@@ -60,16 +82,15 @@ export function FormTask({
   }, [onCloseDialog, resetFields]);
 
   const handleSaveClick = useCallback(() => {
-    const randNumber = Math.floor(Math.random() * 1000);
     if (form) {
       handleSave({
-        id: data?.id || String(randNumber),
+        ...(data?.id && { id: data.id }),
         name: form.name,
         description: form.description,
         created_date: form.created_date,
         expected_date: form.expected_date,
         finished_date: form.finished_date,
-        responsavel: form.responsavel,
+        responsible: form.responsible,
         situation_id: form.situation_id,
         category_id: form.category_id,
       });
@@ -80,11 +101,40 @@ export function FormTask({
 
   const isEdit = useMemo(() => !!data?.id, [data]);
 
-  useEffect(() => {
-    if (openDialog && data?.id) {
-      setForm(data);
+  const fillSituations = useCallback(async () => {
+    try {
+      const situations = await fetch('api/situation').then((res) => res.json());
+      setOptionsSituations(
+        situations.map((item: any) => ({ value: item.id, label: item.nome })),
+      );
+    } catch (error) {
+      console.error(error);
     }
-  }, [openDialog, data]);
+  }, []);
+
+  const fillCategories = useCallback(async () => {
+    try {
+      const categories = await fetch('api/category').then((res) => res.json());
+
+      setOptionsCategories(
+        categories.map((item: any) => ({ value: item.id, label: item.nome })),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (openDialog) {
+      fillSituations();
+      fillCategories();
+
+      if (data?.id) {
+        console.log(data);
+        setForm(data);
+      }
+    }
+  }, [openDialog, data, fillSituations, fillCategories]);
 
   const handleChangeField = useCallback(
     <T extends keyof IFormTask>(name: T, value: IFormTask[T]) => {
@@ -123,6 +173,9 @@ export function FormTask({
                 variant="standard"
                 value={form?.name || ''}
                 onChange={(e) => handleChangeField('name', e.target.value)}
+                required
+                error={!!errors.name}
+                helperText={errors.name}
               />
             </Grid2>
             <Grid2
@@ -137,12 +190,12 @@ export function FormTask({
                 id="name"
                 label="Responsável"
                 type="text"
-                name="responsavel"
+                name="responsible"
                 fullWidth
                 variant="standard"
-                value={form?.responsavel || ''}
+                value={form?.responsible || ''}
                 onChange={(e) =>
-                  handleChangeField('responsavel', e.target.value)
+                  handleChangeField('responsible', e.target.value)
                 }
               />
             </Grid2>
@@ -156,9 +209,7 @@ export function FormTask({
               <DatePicker
                 label="Data de Criação"
                 value={form?.created_date}
-                onChange={(e) =>
-                  handleChangeField('created_date', e || new Date())
-                }
+                onChange={(e) => handleChangeField('created_date', e || null)}
                 sx={{
                   width: '100%',
                 }}
@@ -233,12 +284,11 @@ export function FormTask({
               <SelectCustom
                 label="Situação"
                 value={String(form?.situation_id)}
-                setValue={(value) => handleChangeField('situation_id', +value)}
+                setValue={(value) =>
+                  handleChangeField('situation_id', value || '')
+                }
                 name="situation_id"
-                options={[
-                  { value: '1', label: 'Em andamento' },
-                  { value: '2', label: 'Concluída' },
-                ]}
+                options={optionsSituations}
                 inputLabelText="Situação"
               />
             </Grid2>
@@ -252,12 +302,11 @@ export function FormTask({
               <SelectCustom
                 label="Categoria"
                 value={String(form?.category_id)}
-                setValue={(value) => handleChangeField('category_id', +value)}
+                setValue={(value) =>
+                  handleChangeField('category_id', value || '')
+                }
                 name="category_id"
-                options={[
-                  { value: '1', label: 'Em andamento' },
-                  { value: '2', label: 'Concluída' },
-                ]}
+                options={optionsCategories}
                 inputLabelText="Categoria"
               />
             </Grid2>

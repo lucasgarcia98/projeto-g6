@@ -1,4 +1,3 @@
-'use client';
 import ListCustom from '@/app/components/custom/list';
 
 export default function SituationPage() {

@@ -6,22 +6,12 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } },
 ) {
-  const categorias = await prisma.categoria.findUnique({
+  const tarefas = await prisma.tarefa.findUnique({
     where: {
       id: +params.id,
     },
   });
-  return new Response(JSON.stringify(categorias));
-}
-
-export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const category = await prisma.categoria.create({
-    data: {
-      nome: body.name,
-    },
-  });
-  return new Response(JSON.stringify(category));
+  return new Response(JSON.stringify(tarefas));
 }
 
 export async function DELETE(
@@ -31,7 +21,7 @@ export async function DELETE(
   const { id } = params;
   if (!id) return new Response('Id não informado', { status: 400 });
 
-  const category = await prisma.categoria.delete({
+  const category = await prisma.tarefa.delete({
     where: {
       id: +id,
     },
@@ -54,12 +44,25 @@ export async function PATCH(
 ) {
   const { id } = params;
   const body = await req.json();
-  const updated = await prisma.categoria.update({
+  const updated = await prisma.tarefa.update({
     where: {
       id: +id,
     },
     data: {
-      nome: body.name,
+      ...(body.name && { nome: body.name }),
+      ...(body.description && { descricao: body.description }),
+      ...(body.responsible && { responsavel: body.responsible }),
+      ...(body.created_date && {
+        data_criacao: body.created_date,
+      }),
+      ...(body.expected_date && {
+        data_prevista: body.expected_date,
+      }),
+      ...(body.finished_date && {
+        data_finalizacao: body.finished_date,
+      }),
+      ...(body.situation_id && { situacaoId: body.situation_id }),
+      ...(body.category_id && { categoriaId: body.category_id }),
     },
   });
 

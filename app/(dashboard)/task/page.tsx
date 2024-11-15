@@ -1,5 +1,10 @@
 import ListTask from '@/app/components/task/list';
+import { Suspense } from 'react';
 
 export default function TaskPage() {
-  return <ListTask />;
+  return (
+    <Suspense>
+      <ListTask />
+    </Suspense>
+  );
 }

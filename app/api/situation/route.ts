@@ -3,7 +3,11 @@ import { NextRequest } from 'next/server';
 import prisma from '../database/prisma';
 
 export async function GET(req: NextRequest) {
-  const situations = await prisma.situacao.findMany();
+  const situations = await prisma.situacao.findMany({
+    orderBy: {
+      id: 'asc',
+    },
+  });
   return new Response(JSON.stringify(situations));
 }
 

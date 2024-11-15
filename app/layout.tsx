@@ -1,14 +1,13 @@
 'use client';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import type { Branding, Navigation } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/nextjs';
 import * as React from 'react';
 
-import { Home } from '@mui/icons-material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { ptBR } from 'date-fns/locale';
+import Image from 'next/image';
 
 const NAVIGATION: Navigation = [
   {
@@ -18,29 +17,25 @@ const NAVIGATION: Navigation = [
   {
     segment: '',
     title: 'Dashboard',
-    icon: <Home />,
   },
   {
     segment: 'situation',
     title: 'Situação',
-    icon: <ShoppingCartIcon />,
   },
   {
     segment: 'category',
     title: 'Categoria',
-    icon: <ShoppingCartIcon />,
   },
   {
     segment: 'task',
     title: 'Tarefa',
-    icon: <ShoppingCartIcon />,
   },
 ];
 
 const BRANDING: Branding = {
   title: '',
   logo: (
-    <img
+    <Image
       src="https://www.g6tecnologia.com.br/wp-content/themes/g6-tecnologia/assets/imgs/header/g6-tecnologia.svg"
       alt="G6 Logo"
     />

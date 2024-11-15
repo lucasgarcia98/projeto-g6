@@ -3,7 +3,11 @@ import { NextRequest } from 'next/server';
 import prisma from '../database/prisma';
 
 export async function GET(req: NextRequest) {
-  const category = await prisma.categoria.findMany();
+  const category = await prisma.categoria.findMany({
+    orderBy: {
+      id: 'asc',
+    },
+  });
   return new Response(JSON.stringify(category));
 }
 
