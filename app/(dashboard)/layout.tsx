@@ -4,13 +4,7 @@ import * as React from 'react';
 
 export default function Layout(props: { children: React.ReactNode }) {
   return (
-    <DashboardLayout
-      sx={{
-        '.MuiToolbar-root .MuiButtonBase-root': {
-          display: 'none',
-        },
-      }}
-    >
+    <DashboardLayout>
       <PageContainer>{props.children}</PageContainer>
     </DashboardLayout>
   );
