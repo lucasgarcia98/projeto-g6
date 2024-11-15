@@ -38,6 +38,8 @@ const BRANDING: Branding = {
     <Image
       src="https://www.g6tecnologia.com.br/wp-content/themes/g6-tecnologia/assets/imgs/header/g6-tecnologia.svg"
       alt="G6 Logo"
+      width={200}
+      height={50}
     />
   ),
 };
@@ -45,6 +47,10 @@ const BRANDING: Branding = {
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning data-toolpad-mode="dark">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+        <title>Projeto G6</title>
+      </head>
       <body>
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
           <AppRouterCacheProvider options={{ enableCssLayer: true }}>
