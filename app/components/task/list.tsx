@@ -57,8 +57,9 @@ export default function ListTask() {
             name: item.nome,
             description: item.descricao,
             created_date: new Date(item.data_criacao),
-            expected_date: new Date(item.data_prevista),
-            finished_date: new Date(item.data_finalizacao),
+            expected_date: item?.data_prevista && new Date(item.data_prevista),
+            finished_date:
+              item?.data_finalizacao && new Date(item.data_finalizacao),
             responsible: item.responsavel,
             situation: {
               name: item.situacao?.nome,
