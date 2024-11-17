@@ -2,14 +2,9 @@
 import {
   Box,
   Button,
+  Grid2,
   IconButton,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
 } from '@mui/material';
 
@@ -86,13 +81,40 @@ export default function ListCustom({
     };
 
     return dataList.map((data) => (
-      <TableRow key={data.id}>
-        <TableCell colSpan={4}>{data.name}</TableCell>
-        <TableCell align="right" colSpan={2}>
-          <Stack
-            columnGap={2}
-            flexDirection={'row'}
-            justifyContent={'flex-end'}
+      <Grid2
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 4,
+        }}
+        key={data.id}
+      >
+        <Box
+          sx={{
+            border: '1px solid lightblue',
+            borderRadius: '4px',
+            display: 'flex',
+            flexDirection: 'row',
+            paddingY: '1rem',
+            paddingX: '.5rem',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: '1.2rem',
+            }}
+          >
+            {data.name}
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              padding: '4px',
+              columnGap: '.5rem',
+            }}
           >
             <IconButton
               sx={{
@@ -119,9 +141,9 @@ export default function ListCustom({
             >
               <Delete />
             </IconButton>
-          </Stack>
-        </TableCell>
-      </TableRow>
+          </Box>
+        </Box>
+      </Grid2>
     ));
   }, [dataList, dialogs, getDatas, route]);
 
@@ -160,41 +182,22 @@ export default function ListCustom({
   return (
     <>
       <Stack>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            border: '1px solid #ccc',
-            py: '.8rem',
-            px: '1rem',
-            borderRadius: '10px 10px 0px 0px',
-            alignItems: 'center',
-          }}
-        >
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography>Lista de {title}</Typography>
           <Button variant="outlined" onClick={openDialogForm}>
             Novo
           </Button>
         </Box>
-        <TableContainer
+        <Grid2
+          container
+          spacing={2}
+          rowSpacing={2}
           sx={{
-            border: '1px solid #ccc',
-            borderRadius: '0px 0px 10px 10px',
-            borderTop: 'none',
+            marginTop: '1rem',
           }}
         >
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell colSpan={4}>Nome</TableCell>
-                <TableCell align="right" colSpan={2}>
-                  Ações
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{rows}</TableBody>
-          </Table>
-        </TableContainer>
+          {rows}
+        </Grid2>
       </Stack>
       <FormCustom
         titleDialog={titleDialog}

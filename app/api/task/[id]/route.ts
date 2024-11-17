@@ -61,8 +61,12 @@ export async function PATCH(
       ...(body.finished_date && {
         data_finalizacao: body.finished_date,
       }),
-      ...(body.situation_id && { situacaoId: body.situation_id }),
-      ...(body.category_id && { categoriaId: body.category_id }),
+      ...(body.situation_id && String(body.situation_id).length > 0
+        ? { situacaoId: body.situation_id }
+        : { situacaoId: null }),
+      ...(body.category_id && String(body.category_id).length > 0
+        ? { categoriaId: +body.category_id }
+        : { categoriaId: null }),
     },
   });
 
@@ -73,7 +77,7 @@ export async function PATCH(
   }
 
   return new Response(
-    JSON.stringify(`Situação ${body.name} atualizada com sucesso!`),
+    JSON.stringify(`Tarefa ${updated.nome} atualizada com sucesso!`),
     {
       status: 200,
     },

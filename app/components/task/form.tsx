@@ -145,6 +145,7 @@ export function FormTask({
     },
     [setForm],
   );
+
   return (
     <Dialog open={openDialog} onClose={handleCancel} maxWidth="lg">
       <DialogTitle>{isEdit ? 'Editar' : 'Nova'} Tarefa</DialogTitle>

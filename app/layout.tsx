@@ -4,6 +4,7 @@ import type { Branding, Navigation } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/nextjs';
 import * as React from 'react';
 
+import { createTheme } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { ptBR } from 'date-fns/locale';
@@ -46,7 +47,12 @@ const BRANDING: Branding = {
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning data-toolpad-mode="dark">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      data-toolpad-mode="dark"
+      data-theme="disabled"
+    >
       <head>
         <link rel="icon" href="/favicon.ico" />
         <title>Projeto G6</title>
@@ -54,7 +60,17 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       <body>
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
           <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-            <AppProvider navigation={NAVIGATION} branding={BRANDING}>
+            <AppProvider
+              navigation={NAVIGATION}
+              branding={BRANDING}
+              theme={createTheme({
+                colorSchemes: {
+                  dark: true,
+                  light: false,
+                },
+                defaultColorScheme: 'dark',
+              })}
+            >
               {props.children}
             </AppProvider>
           </AppRouterCacheProvider>

@@ -2,14 +2,9 @@
 import {
   Box,
   Button,
+  Grid2,
   IconButton,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
 } from '@mui/material';
 
@@ -105,29 +100,106 @@ export default function ListTask() {
     };
 
     return dataList.map((data) => (
-      <TableRow key={data.id}>
-        <TableCell>{data.name}</TableCell>
-        <TableCell>{data.description}</TableCell>
-        <TableCell>
-          {data?.created_date &&
-            format(new Date(data.created_date), 'dd/MM/yyyy')}
-        </TableCell>
-        <TableCell>
-          {data?.expected_date &&
-            format(new Date(data.expected_date), 'dd/MM/yyyy')}
-        </TableCell>
-        <TableCell>
-          {data?.finished_date &&
-            format(new Date(data.finished_date), 'dd/MM/yyyy')}
-        </TableCell>
-        <TableCell>{data.responsible}</TableCell>
-        <TableCell>{data?.situation?.name || ''}</TableCell>
-        <TableCell>{data?.category?.name || ''}</TableCell>
-        <TableCell align="right" colSpan={2}>
-          <Stack
-            columnGap={2}
-            flexDirection={'row'}
-            justifyContent={'flex-end'}
+      <Grid2
+        size={{
+          xs: 12,
+        }}
+        key={data.id}
+      >
+        <Box
+          sx={{
+            border: '1px solid lightblue',
+            borderRadius: '4px',
+            display: 'flex',
+            flexDirection: 'row',
+            paddingY: '1rem',
+            paddingX: '.5rem',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Stack>
+            <Typography
+              sx={{
+                fontSize: '1.2rem',
+              }}
+            >
+              {data.name}
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: '1rem',
+              }}
+            >
+              {data.description}
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: '1rem',
+              }}
+            >
+              {data?.created_date &&
+                `Criada em ${format(new Date(data.created_date), 'dd/MM/yyyy')}`}
+            </Typography>
+            {data?.expected_date && (
+              <Typography
+                sx={{
+                  fontSize: '1rem',
+                }}
+              >
+                Prevista para{' '}
+                {format(new Date(data.expected_date), 'dd/MM/yyyy')}
+              </Typography>
+            )}
+            {data?.finished_date && (
+              <Typography
+                sx={{
+                  fontSize: '1rem',
+                }}
+              >
+                Finalizada em{' '}
+                {format(new Date(data.finished_date), 'dd/MM/yyyy')}
+              </Typography>
+            )}
+            <Typography
+              sx={{
+                fontSize: '1rem',
+              }}
+            >
+              Responsável: {data.responsible}
+            </Typography>
+
+            <Typography
+              sx={{
+                fontSize: '1rem',
+              }}
+            >
+              Situação:{' '}
+              {data?.situation?.name &&
+              String(data?.situation?.name)?.length > 0
+                ? data?.situation?.name
+                : 'Nenhuma situação'}
+            </Typography>
+
+            <Typography
+              sx={{
+                fontSize: '1rem',
+              }}
+            >
+              Categoria:{' '}
+              {data?.category?.name && String(data?.category?.name)?.length > 0
+                ? data?.category?.name
+                : 'Nenhuma categoria'}
+            </Typography>
+          </Stack>
+
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              padding: '4px',
+              columnGap: '.5rem',
+            }}
           >
             <IconButton
               sx={{
@@ -154,9 +226,9 @@ export default function ListTask() {
             >
               <Delete />
             </IconButton>
-          </Stack>
-        </TableCell>
-      </TableRow>
+          </Box>
+        </Box>
+      </Grid2>
     ));
   }, [dataList, dialogs, getTasks]);
 
@@ -237,33 +309,16 @@ export default function ListTask() {
             Novo
           </Button>
         </Box>
-        <TableContainer
+        <Grid2
+          container
+          spacing={2}
+          rowSpacing={2}
           sx={{
-            border: '1px solid #ccc',
-            borderRadius: '0px 0px 10px 10px',
-            borderTop: 'none',
-            overflowX: 'scroll',
+            marginTop: '1rem',
           }}
         >
-          <Table sx={{ minWidth: 650, maxWidth: 850, overflowX: "scroll" }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Nome</TableCell>
-                <TableCell>Descrição</TableCell>
-                <TableCell>Data de Criação</TableCell>
-                <TableCell>Data Prevista</TableCell>
-                <TableCell>Data Finalizada</TableCell>
-                <TableCell>Responsável</TableCell>
-                <TableCell>Situação</TableCell>
-                <TableCell>Categoria</TableCell>
-                <TableCell align="right" colSpan={2}>
-                  Ações
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody sx={{overflowX: "scroll"}}>{rows}</TableBody>
-          </Table>
-        </TableContainer>
+          {rows}
+        </Grid2>
       </Stack>
       <FormTask
         data={dataEdit}

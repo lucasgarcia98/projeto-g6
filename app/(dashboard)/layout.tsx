@@ -4,7 +4,7 @@ import * as React from 'react';
 
 export default function Layout(props: { children: React.ReactNode }) {
   return (
-    <DashboardLayout>
+    <DashboardLayout defaultSidebarCollapsed={false} disableCollapsibleSidebar>
       <PageContainer>{props.children}</PageContainer>
     </DashboardLayout>
   );
