@@ -2,6 +2,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Grid2,
   IconButton,
   Stack,
@@ -30,6 +31,7 @@ export default function ListTask() {
   const [dialogForm, setDialogForm] = useState(false);
   const [dataList, setDataList] = useState<Array<DataListType>>([]);
   const [dataEdit, setDataEdit] = useState<IFormTask | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const openDialogForm = () => {
     setDialogForm(true);
@@ -43,6 +45,7 @@ export default function ListTask() {
   const dialogs = useDialogs();
 
   const getTasks = useCallback(async () => {
+    setLoading(true);
     fetch(`api/task`)
       .then((res) => res.json())
       .then((data) => {
@@ -71,7 +74,8 @@ export default function ListTask() {
       })
       .catch((err) => {
         console.error(err);
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -80,6 +84,7 @@ export default function ListTask() {
 
   const rows = useMemo(() => {
     const deleteRow = async (id: string) => {
+      setLoading(true);
       const confirm = await dialogs.confirm('Tem certeza que deseja excluir?', {
         cancelText: 'Cancelar',
         okText: 'Excluir',
@@ -92,7 +97,7 @@ export default function ListTask() {
           }).then((res) => res.json());
 
           console.log(deleteById);
-          getTasks();
+          getTasks().then(() => setLoading(false));
         } catch (error) {
           console.error(error);
         }
@@ -233,6 +238,7 @@ export default function ListTask() {
   }, [dataList, dialogs, getTasks]);
 
   const handleSave = async (data: SaveType) => {
+    setLoading(true);
     if (dataEdit && dataEdit?.id === data?.id) {
       try {
         const updateById = await fetch(`api/task/${data.id}`, {
@@ -266,7 +272,7 @@ export default function ListTask() {
       } catch (error) {
         console.error(error);
       }
-      getTasks();
+      getTasks().then(() => setLoading(false));
     } else {
       try {
         const create = await fetch(`api/task`, {
@@ -286,7 +292,7 @@ export default function ListTask() {
       } catch (error) {
         console.error(error);
       }
-      getTasks();
+      getTasks().then(() => setLoading(false));
     }
   };
 
@@ -309,16 +315,29 @@ export default function ListTask() {
             Novo
           </Button>
         </Box>
-        <Grid2
-          container
-          spacing={2}
-          rowSpacing={2}
-          sx={{
-            marginTop: '1rem',
-          }}
-        >
-          {rows}
-        </Grid2>
+        {loading ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '200px',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Grid2
+            container
+            spacing={2}
+            rowSpacing={2}
+            sx={{
+              marginTop: '1rem',
+            }}
+          >
+            {rows}
+          </Grid2>
+        )}
       </Stack>
       <FormTask
         data={dataEdit}

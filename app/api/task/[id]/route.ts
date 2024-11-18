@@ -44,29 +44,26 @@ export async function PATCH(
 ) {
   const { id } = params;
   const body = await req.json();
+
   const updated = await prisma.tarefa.update({
     where: {
       id: +id,
     },
     data: {
-      ...(body.name && { nome: body.name }),
-      ...(body.description && { descricao: body.description }),
-      ...(body.responsible && { responsavel: body.responsible }),
-      ...(body.created_date && {
+      ...('name' in body && { nome: body.name }),
+      ...('description' in body && { descricao: body.description }),
+      ...('responsible' in body && { responsavel: body.responsible }),
+      ...('created_date' in body && {
         data_criacao: body.created_date,
       }),
-      ...(body.expected_date && {
+      ...('expected_date' in body && {
         data_prevista: body.expected_date,
       }),
-      ...(body.finished_date && {
+      ...('finished_date' in body && {
         data_finalizacao: body.finished_date,
       }),
-      ...(body.situation_id && String(body.situation_id).length > 0
-        ? { situacaoId: body.situation_id }
-        : { situacaoId: null }),
-      ...(body.category_id && String(body.category_id).length > 0
-        ? { categoriaId: +body.category_id }
-        : { categoriaId: null }),
+      ...('situation_id' in body && { situacaoId: body.situation_id }),
+      ...('category_id' in body && { categoriaId: body.category_id }),
     },
   });
 

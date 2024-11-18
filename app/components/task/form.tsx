@@ -15,15 +15,15 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import SelectCustom from '../custom/input/select';
 import { SaveType } from './list';
 export interface IFormTask {
-  id: string;
-  name: string;
-  description: string;
+  id: string | null;
+  name: string | null;
+  description: string | null;
   created_date: Date | null;
   expected_date: Date | null;
   finished_date: Date | null;
-  responsible: string;
-  situation_id: string;
-  category_id: string;
+  responsible: string | null;
+  situation_id: string | null;
+  category_id: string | null;
 }
 
 const initialData: IFormTask = {
@@ -91,7 +91,11 @@ export function FormTask({
         expected_date: form.expected_date,
         finished_date: form.finished_date,
         responsible: form.responsible,
-        situation_id: form.situation_id,
+        situation_id:
+          typeof form.situation_id === 'string' &&
+          form.situation_id?.length === 0
+            ? null
+            : form.situation_id,
         category_id: form.category_id,
       });
     }
